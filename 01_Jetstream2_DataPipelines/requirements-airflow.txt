@@ -1,0 +1,5 @@
+# Airflow 2.x is required: the DAG uses airflow.operators.python, which changed in Airflow 3.
+# Install with the matching constraints file (see README):
+#   pip install -r requirements-airflow.txt --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.10.5/constraints-${PY}.txt"
+apache-airflow==2.10.5
+docker
