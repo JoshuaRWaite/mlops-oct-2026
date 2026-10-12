@@ -22,7 +22,7 @@ You will containerize a Streamlit app that extracts frames from uploaded video, 
 4. Clone this repository into your home directory:
    ```bash
    cd ~
-   git clone https://github.com/TranslationalAICenterISU/mlops-oct-2026.git
+   git clone https://github.com/JoshuaRWaite/mlops-oct-2026.git
    cd mlops-oct-2026
    ```
 5. Follow the Module 1 README.
