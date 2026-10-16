@@ -33,7 +33,7 @@ You will containerize a Streamlit app that extracts frames from uploaded video, 
 
 ## Module 2: Multi Node Training
 
-**Start here:** `02_Delta_multi_Node_training/README.md`](02_Delta_multi_Node_training/README.md) has the full setup and commands.
+**Start here:** [`02_Delta_multi_Node_training/README.md`](02_Delta_multi_Node_training/README.md) has the full setup and commands.
 
 ## Prerequisites
 
