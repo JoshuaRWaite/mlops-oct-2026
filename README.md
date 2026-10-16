@@ -7,6 +7,7 @@ Code and materials for the Translational AI Center's MLOps micro-credential. The
 | Module | Folder | Platform | Status |
 |--------|--------|----------|--------|
 | 1. Data pipelines | [`01_Jetstream2_DataPipelines`](01_Jetstream2_DataPipelines/) | Jetstream2 | Released |
+| 2. Multi Node Training | [`02_Delta_multi_Node_training`](02_Delta_multi_Node_training/) | Delta | Released |
 
 ## Module 1: Data pipelines
 
@@ -30,9 +31,13 @@ You will containerize a Streamlit app that extracts frames from uploaded video, 
 > **Heads up on folder names:** the Module 1 commands and the Airflow DAG assume the folder lives at `/home/exouser/01_Jetstream2_DataPipelines`. If you clone the repo as above, copy or symlink the folder there:
 > `ln -s ~/mlops-oct-2026/01_Jetstream2_DataPipelines ~/01_Jetstream2_DataPipelines`
 
+## Module 2: Multi Node Training
+
+**Start here:** `02_Delta_multi_Node_training/README.md`](02_Delta_multi_Node_training/README.md) has the full setup and commands.
+
 ## Prerequisites
 
-- Jetstream2 access (provided through Canvas / your ACCESS allocation)
+- Jetstream2 and Delta access (provided through Canvas / your ACCESS allocation)
 - Basic Python and machine learning familiarity
 - Docker and Airflow are covered in the live sessions
 
