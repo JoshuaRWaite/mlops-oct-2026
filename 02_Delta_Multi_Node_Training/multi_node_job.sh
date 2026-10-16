@@ -9,14 +9,14 @@
 #SBATCH --gpus-per-node=4
 #SBATCH --ntasks-per-node=4 # one task per GPU (Lightning DDP expects this)
 #SBATCH --job-name="multi_node"
-#SBATCH --mail-user=baditya@iastate.edu   # email address
+#SBATCH --mail-user=[UPDATE WITH YOUR EMAIL ADDRESS HERE]   # email address
 #SBATCH --mail-type=BEGIN
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
 #SBATCH --output="multi_node_op.txt" # job standard output file
 #SBATCH --error="multi_node_error.e" # job standard error file
 # LOAD MODULES, INSERT CODE, AND RUN YOUR PROGRAMS HERE
-module load anaconda3_gpu/23.9.0
+module load pytorch-conda/2.12
 source activate mlops
 
 # --- Weights & Biases ---

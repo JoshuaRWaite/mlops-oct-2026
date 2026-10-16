@@ -7,7 +7,7 @@ Code and materials for the Translational AI Center's MLOps micro-credential. The
 | Module | Folder | Platform | Status |
 |--------|--------|----------|--------|
 | 1. Data pipelines | [`01_Jetstream2_DataPipelines`](01_Jetstream2_DataPipelines/) | Jetstream2 | Released |
-| 2. Multi Node Training | [`02_Delta_multi_Node_training`](02_Delta_multi_Node_training/) | Delta | Released |
+| 2. Multi Node Training | [`02_Delta_Multi_Node_Training`](02_Delta_Multi_Node_Training/) | Delta | Released |
 
 ## Module 1: Data pipelines
 
@@ -33,7 +33,7 @@ You will containerize a Streamlit app that extracts frames from uploaded video, 
 
 ## Module 2: Multi Node Training
 
-**Start here:** [`02_Delta_multi_Node_training/README.md`](02_Delta_multi_Node_training/README.md) has the full setup and commands.
+**Start here:** [`02_Delta_Multi_Node_Training/README.md`](02_Delta_Multi_Node_Training/README.md) has the full setup and commands.
 
 ## Prerequisites
 

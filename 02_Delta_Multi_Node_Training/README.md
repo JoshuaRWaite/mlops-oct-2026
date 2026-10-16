@@ -11,7 +11,7 @@ This demo trains a small MNIST classifier on NCSA Delta GPUs and tracks the run 
 ## Quick start: the main steps on Delta
 
 1. **Log in** to Delta (VS Code or SSH) -> [Section 1](#1-log-in-to-delta)
-2. **Set up the environment** once (conda + W&B login) -> [Section 2](#2-set-up-the-environment-one-time)
+2. **Set up the environment** once (load the PyTorch module + W&B login) -> [Section 2](#2-set-up-the-environment-one-time)
 3. **Submit the job** with `sbatch multi_node_job.sh` -> [Section 3](#3-run-the-demo-on-delta)
 4. **Monitor it** with `squeue -u $USER` and watch the run live on wandb.ai
 5. **Check results** in `multi_node_op.txt` and in your W&B project
@@ -68,16 +68,28 @@ More in the Delta docs: https://docs.ncsa.illinois.edu
 
 Run these on the Delta login node.
 
-### Conda environment
+### Python environment
+
+Delta's modules change over time, so check what is currently available:
 
 ```bash
-module load anaconda3_gpu
-conda create -n mlops python=3.8
-source activate mlops
-conda install pytorch torchvision torchaudio pytorch-cuda-12.1 -c pytorch -c nvidia
-pip install scipy --upgrade
-pip install matplotlib pytorch_lightning wandb
+module avail pytorch
 ```
+
+`pytorch-conda/2.12` has worked on Delta recently:
+
+```bash
+module load pytorch-conda/2.12
+pip install --user pytorch_lightning wandb
+```
+
+If a module name is no longer available, load the newest `pytorch-conda` version listed and use that in `multi_node_job.sh` too. Quick check that everything imports:
+
+```bash
+python -c "import torch, torchvision, pytorch_lightning, wandb; print(torch.__version__, torch.cuda.is_available())"
+```
+
+(`torch.cuda.is_available()` prints `False` on the login node because it has no GPU; that is expected.)
 
 ### Weights & Biases
 
