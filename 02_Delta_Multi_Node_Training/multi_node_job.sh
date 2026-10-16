@@ -4,7 +4,7 @@
 #SBATCH --time=1:00:00   # walltime limit (HH:MM:SS)
 #SBATCH --nodes=1  # number of nodes
 #SBATCH --mem=64g
-#SBATCH --account=bcjh-delta-gpu 
+#SBATCH --account=bjbq-delta-gpu 
 #SBATCH --partition=gpuA100x4
 #SBATCH --gpus-per-node=4
 #SBATCH --ntasks-per-node=4 # one task per GPU (Lightning DDP expects this)
@@ -16,7 +16,7 @@
 #SBATCH --output="multi_node_op.txt" # job standard output file
 #SBATCH --error="multi_node_error.e" # job standard error file
 # LOAD MODULES, INSERT CODE, AND RUN YOUR PROGRAMS HERE
-module load pytorch-conda/2.12
+module load miniforge3-python
 source activate mlops
 
 # --- Weights & Biases ---

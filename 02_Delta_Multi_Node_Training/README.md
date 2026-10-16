@@ -73,23 +73,31 @@ Run these on the Delta login node.
 Delta's modules change over time, so check what is currently available:
 
 ```bash
-module avail pytorch
+module avail miniforge
 ```
-
-`pytorch-conda/2.12` has worked on Delta recently:
+miniforge3-python has worked recently
 
 ```bash
-module load pytorch-conda/2.12
-pip install --user pytorch_lightning wandb
+module load miniforge3-python
+conda create -n mlops python=3.11 -y
+conda activate mlops
+pip install torch torchvision pytorch_lightning wandb
 ```
+Note: You may need to runn conda init and restart the terminal before being able to run conda activate mlops
 
-If a module name is no longer available, load the newest `pytorch-conda` version listed and use that in `multi_node_job.sh` too. Quick check that everything imports:
+Quick check that everything imports:
 
 ```bash
 python -c "import torch, torchvision, pytorch_lightning, wandb; print(torch.__version__, torch.cuda.is_available())"
 ```
 
 (`torch.cuda.is_available()` prints `False` on the login node because it has no GPU; that is expected.)
+
+Even though this environment is simple, it's best practices to create a requirements.txt:
+
+```bash
+pip freeze > requirements.txt
+```
 
 ### Weights & Biases
 
@@ -111,12 +119,13 @@ python -c "import torch, torchvision, pytorch_lightning, wandb; print(torch.__ve
 ## 3. Run the demo on Delta
 
 ### Submit the job
+Update your email in multi_node_job.sh before running:
 
 ```bash
 sbatch multi_node_job.sh
 ```
 
-Slurm prints a job ID, such as `Submitted batch job 123456`. The job script requests 1 node with 4 A100 GPUs (`gpuA100x4` partition, `bcjh-delta-gpu` account).
+Slurm prints a job ID, such as `Submitted batch job 123456`. The job script requests 1 node with 4 A100 GPUs (`gpuA100x4` partition, `bjbq-delta-gpu` account).
 
 ### Monitor the job
 
