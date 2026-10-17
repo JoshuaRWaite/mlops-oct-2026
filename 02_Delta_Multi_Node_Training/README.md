@@ -91,7 +91,7 @@ Quick check that everything imports:
 python -c "import torch, torchvision, pytorch_lightning, wandb; print(torch.__version__, torch.cuda.is_available())"
 ```
 
-(`torch.cuda.is_available()` prints `False` on the login node because it has no GPU; that is expected.)
+Conda environments are stored in $HOME/.conda by default. If your home quota is tight, create it elsewhere with conda create --prefix /projects/<your-project>/mlops python=3.11
 
 Even though this environment is simple, it's best practices to create a requirements.txt:
 
@@ -119,11 +119,24 @@ pip freeze > requirements.txt
 ## 3. Run the demo on Delta
 
 ### Submit the job
-Update your email in multi_node_job.sh before running:
-
+Before running, edit `multi_node_job.sh`:
+ 
+- Set `--account` to one of your own projects (run `accounts` on the login node to list them).
+- Optional: for email notifications, remove one `#` from the two `##SBATCH --mail-...` lines and put your email address in `--mail-user`.
+Then submit:
+ 
 ```bash
 sbatch multi_node_job.sh
 ```
+ 
+**Note:** the job uses the environment that was active when you submitted it (the job script does not activate anything itself, as the Delta docs advise). If the module isn't loaded or the `mlops` environment isn't activated, run this instead:
+ 
+```bash
+module load miniforge3-python
+conda activate mlops
+sbatch multi_node_job.sh
+```
+
 
 Slurm prints a job ID, such as `Submitted batch job 123456`. The job script requests 1 node with 4 A100 GPUs (`gpuA100x4` partition, `bjbq-delta-gpu` account).
 
