@@ -1,0 +1,26 @@
+# Pinned 2026-10-22. Only what the demo actually imports.
+
+# Core ML
+numpy==2.5.4
+torch==2.14.1
+torchvision==0.29.1
+pillow==13.0.0
+opencv-python-headless==5.0.0.93   # headless: no libGL needed on servers
+
+# Experiment tracking
+mlflow==3.17.2
+wandb==0.31.0
+
+# Serving + monitoring
+fastapi==0.161.0
+uvicorn==0.54.0
+python-multipart==0.0.32           # required by FastAPI for file uploads
+prometheus-client==0.26.0
+
+# Upload UI
+streamlit==1.66.1
+
+# Testing
+requests==2.34.2
+httpx==0.28.1                      # needed by FastAPI's TestClient
+pytest==9.1.1

@@ -1,0 +1,8 @@
+[server]
+headless = true          # don't try to open a browser or ask for an email on first run
+address = "127.0.0.1"
+port = 8501
+maxUploadSize = 2000     # MB. The default (200) is too small for big photo zips.
+
+[browser]
+gatherUsageStats = false
