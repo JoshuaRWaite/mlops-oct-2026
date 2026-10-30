@@ -1,0 +1,11 @@
+# environment and downloaded tools
+.venv/
+kubeflow-manifests/
+__pycache__/
+
+# runtime state and logs
+.run/
+logs/
+
+# images kept by send_drift.sh
+incoming_images/

@@ -1,0 +1,4 @@
+# Packages on the VM itself: compile pipelines, start runs, upload data, check for drift.
+kfp==2.18.0
+boto3==1.43.121
+requests>=2.32

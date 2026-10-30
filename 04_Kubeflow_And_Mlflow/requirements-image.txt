@@ -1,0 +1,9 @@
+# Packages inside the container image (pipeline steps + MLflow server).
+# Same pins as the repo's main requirements.txt, minus the web/monitoring tools.
+# torch and torchvision are installed first by the Dockerfile (so it can pick a CUDA build); pip skips them here.
+numpy==2.5.4
+torch==2.14.1
+torchvision==0.29.1
+pillow==13.0.0
+opencv-python-headless==5.0.0.93
+mlflow==3.17.2

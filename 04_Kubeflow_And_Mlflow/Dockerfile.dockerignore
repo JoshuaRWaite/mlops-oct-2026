@@ -1,0 +1,10 @@
+# Used automatically by `docker build -f 04_Kubeflow_And_Mlflow/Dockerfile` (BuildKit, the default in current Docker).
+# The build context is the whole repo, so send Docker ONLY the six files the Dockerfile copies.
+# Without this, folders like uploaded_images/ or mlflow-artifacts/ from module 3 would be sent along.
+*
+!03_Full_Cycle_MLOps/config.py
+!03_Full_Cycle_MLOps/model.py
+!03_Full_Cycle_MLOps/process_images.py
+!03_Full_Cycle_MLOps/train_model.py
+!04_Kubeflow_And_Mlflow/requirements-image.txt
+!04_Kubeflow_And_Mlflow/lifecycle/promote.py

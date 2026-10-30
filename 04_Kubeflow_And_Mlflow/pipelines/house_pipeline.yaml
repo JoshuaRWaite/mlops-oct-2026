@@ -1,0 +1,212 @@
+# PIPELINE DEFINITION
+# Name: house-autoencoder
+# Description: Preprocess house photos, train an autoencoder, register it in MLflow, and promote it if it beats the champion.
+# Inputs:
+#    batch_size: int [Default: 32.0]
+#    epochs: int [Default: 10.0]
+#    mlflow_uri: str [Default: 'http://172.18.0.1:5000']
+#    previous_version: str [Default: '']
+#    raw_zip_uri: str [Default: 'minio://mlpipeline/data/module3-images.zip']
+components:
+  comp-importer:
+    executorLabel: exec-importer
+    inputDefinitions:
+      parameters:
+        uri:
+          parameterType: STRING
+    outputDefinitions:
+      artifacts:
+        artifact:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+  comp-preprocess:
+    executorLabel: exec-preprocess
+    inputDefinitions:
+      artifacts:
+        raw_zip:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+    outputDefinitions:
+      artifacts:
+        processed:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+  comp-promote:
+    executorLabel: exec-promote
+    inputDefinitions:
+      artifacts:
+        processed:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+      parameters:
+        mlflow_uri:
+          parameterType: STRING
+        previous_version:
+          parameterType: STRING
+  comp-train:
+    executorLabel: exec-train
+    inputDefinitions:
+      artifacts:
+        processed:
+          artifactType:
+            schemaTitle: system.Dataset
+            schemaVersion: 0.0.1
+      parameters:
+        batch_size:
+          parameterType: NUMBER_INTEGER
+        epochs:
+          parameterType: NUMBER_INTEGER
+        mlflow_uri:
+          parameterType: STRING
+deploymentSpec:
+  executors:
+    exec-importer:
+      importer:
+        artifactUri:
+          runtimeParameter: uri
+        typeSchema:
+          schemaTitle: system.Dataset
+          schemaVersion: 0.0.1
+    exec-preprocess:
+      container:
+        args:
+        - '{{$.inputs.artifacts[''raw_zip''].path}}'
+        - '{{$.outputs.artifacts[''processed''].path}}'
+        command:
+        - sh
+        - -c
+        - python -m zipfile -e "$0" /tmp/raw && python process_images.py --input /tmp/raw
+          --output "$1"
+        image: house-autoencoder:module4
+    exec-promote:
+      container:
+        args:
+        - '{{$.inputs.parameters[''mlflow_uri'']}}'
+        - '{{$.inputs.artifacts[''processed''].path}}'
+        - '{{$.inputs.parameters[''previous_version'']}}'
+        command:
+        - sh
+        - -c
+        - MLFLOW_TRACKING_URI="$0" python promote.py --data "$1" ${2:+--previous "$2"}
+        image: house-autoencoder:module4
+    exec-train:
+      container:
+        args:
+        - '{{$.inputs.parameters[''mlflow_uri'']}}'
+        - '{{$.inputs.artifacts[''processed''].path}}'
+        - '{{$.inputs.parameters[''epochs'']}}'
+        - '{{$.inputs.parameters[''batch_size'']}}'
+        command:
+        - sh
+        - -c
+        - MLFLOW_TRACKING_URI="$0" python train_model.py --data "$1" --epochs "$2"
+          --batch-size "$3"
+        image: house-autoencoder:module4
+        resources:
+          accelerator:
+            count: '1'
+            resourceCount: '1'
+            resourceType: nvidia.com/gpu
+            type: nvidia.com/gpu
+pipelineInfo:
+  description: Preprocess house photos, train an autoencoder, register it in MLflow,
+    and promote it if it beats the champion.
+  name: house-autoencoder
+root:
+  dag:
+    tasks:
+      importer:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-importer
+        inputs:
+          parameters:
+            uri:
+              componentInputParameter: raw_zip_uri
+        taskInfo:
+          name: importer
+      preprocess:
+        cachingOptions:
+          enableCache: true
+        componentRef:
+          name: comp-preprocess
+        dependentTasks:
+        - importer
+        inputs:
+          artifacts:
+            raw_zip:
+              taskOutputArtifact:
+                outputArtifactKey: artifact
+                producerTask: importer
+        taskInfo:
+          name: preprocess
+      promote:
+        cachingOptions: {}
+        componentRef:
+          name: comp-promote
+        dependentTasks:
+        - preprocess
+        - train
+        inputs:
+          artifacts:
+            processed:
+              taskOutputArtifact:
+                outputArtifactKey: processed
+                producerTask: preprocess
+          parameters:
+            mlflow_uri:
+              componentInputParameter: mlflow_uri
+            previous_version:
+              componentInputParameter: previous_version
+        taskInfo:
+          name: promote
+      train:
+        cachingOptions: {}
+        componentRef:
+          name: comp-train
+        dependentTasks:
+        - preprocess
+        inputs:
+          artifacts:
+            processed:
+              taskOutputArtifact:
+                outputArtifactKey: processed
+                producerTask: preprocess
+          parameters:
+            batch_size:
+              componentInputParameter: batch_size
+            epochs:
+              componentInputParameter: epochs
+            mlflow_uri:
+              componentInputParameter: mlflow_uri
+        taskInfo:
+          name: train
+  inputDefinitions:
+    parameters:
+      batch_size:
+        defaultValue: 32.0
+        isOptional: true
+        parameterType: NUMBER_INTEGER
+      epochs:
+        defaultValue: 10.0
+        isOptional: true
+        parameterType: NUMBER_INTEGER
+      mlflow_uri:
+        defaultValue: http://172.18.0.1:5000
+        isOptional: true
+        parameterType: STRING
+      previous_version:
+        defaultValue: ''
+        isOptional: true
+        parameterType: STRING
+      raw_zip_uri:
+        defaultValue: minio://mlpipeline/data/module3-images.zip
+        isOptional: true
+        parameterType: STRING
+schemaVersion: 2.1.0
+sdkVersion: kfp-2.18.0
